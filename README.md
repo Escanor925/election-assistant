@@ -6,7 +6,7 @@ An interactive, AI-powered chat assistant built for the Indian Election Commissi
 
 **[Open the Voter Education Assistant](https://voter-education-assistant-227872294946.us-central1.run.app)**
 
-> ⚠️ **Submission TODO:** Replace the URL above with the live Cloud Run URL before submitting. The same replacement is required in `LINKEDIN_POST.md`.
+
 
 ## 🏆 Hackathon Submission Details
 
