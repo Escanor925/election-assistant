@@ -1,0 +1,48 @@
+# Secrets — NEVER bake these into a container image
+.env
+.env.*
+*.env
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# VCS
+.git/
+.gitignore
+.gitattributes
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Docs / dev-only files (not needed at runtime)
+README.md
+LINKEDIN_POST.md
+docs/
+test_*.py
+tests/
+
+# Docker meta
+Dockerfile
+.dockerignore
+cloudbuild.yaml

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Descriptive title for accessibility and SEO -->
+    <title>Indian Election Commission - Voter Education Assistant</title>
+    <meta name="description" content="An AI-powered Voter Education Assistant by the Election Commission of India. Get factual information about voter registration, EVM/VVPAT procedures, and polling guidelines.">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            background-color: #ff9933; /* Saffron color */
+            /* WCAG AA fix: white on saffron is ~2.2:1 (FAIL).
+               Near-black on saffron is ~10:1 (PASS) and matches the
+               flag's chakra-on-saffron motif. */
+            color: #1a1a1a;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0 0 4px 0;
+        }
+        header p {
+            margin: 0;
+            font-weight: 600;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            flex-grow: 1;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .bot-message {
+            background-color: #e3f2fd;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            color: #333;
+        }
+        .user-message {
+            background-color: #138808; /* India green color */
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            outline: none;
+            font-size: 16px;
+        }
+        /* Add focus ring for accessibility */
+        input[type="text"]:focus, button:focus {
+            outline: 2px solid #000080;
+            outline-offset: 2px;
+        }
+        button {
+            background-color: #000080; /* Ashoka Chakra navy blue */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin-left: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0000cd;
+        }
+        .loading {
+            align-self: flex-start;
+            color: #666;
+            font-style: italic;
+            display: none;
+            padding: 0 20px;
+        }
+        /* Screen-reader-only class: visually hidden but accessible to assistive technology */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header role="banner">
+    <h1>Voter Education Assistant</h1>
+    <p>Election Commission of India</p>
+</header>
+
+<main class="chat-container" aria-label="Chat Interface">
+    <section class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Chat Message History">
+        <div class="message bot-message">
+            Namaskar! I am the official Voter Education Assistant. How can I help you today with information about voter registration, EVM procedures, or the election process?
+        </div>
+    </section>
+    
+    <div class="loading" id="loading" aria-hidden="true">Assistant is typing...</div>
+    
+    <form class="input-area" id="chat-form" aria-label="Message input form">
+        <label for="user-input" class="sr-only">Type your question</label>
+        <input type="text" id="user-input" name="user-input" placeholder="Type your question here..." maxlength="2000" autocomplete="off" required>
+        <button type="submit">Send</button>
+    </form>
+</main>
+
+<script>
+    const form = document.getElementById('chat-form');
+    
+    form.addEventListener('submit', async function(event) {
+        // Prevent page reload to natively handle Enter key submission
+        event.preventDefault();
+        
+        const inputField = document.getElementById('user-input');
+        const messageText = inputField.value.trim();
+        
+        if (!messageText) return;
+
+        // Add user message to UI
+        addMessage(messageText, 'user-message');
+        inputField.value = '';
+
+        // Show loading indicator
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('loading').setAttribute('aria-hidden', 'false');
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: messageText })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loading').setAttribute('aria-hidden', 'true');
+            
+            // Add bot response to UI
+            addMessage(data.response, 'bot-message');
+
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loading').setAttribute('aria-hidden', 'true');
+            addMessage('Sorry, I encountered an error while processing your request.', 'bot-message');
+        }
+    });
+
+    function addMessage(text, className) {
+        const messagesContainer = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+
+        // Safe renderer: builds DOM nodes via textContent only.
+        // Never touches innerHTML, so any HTML/script in the LLM response is
+        // rendered as literal text. Supports **bold** and newlines only.
+        appendFormatted(messageDiv, String(text == null ? '' : text));
+
+        messagesContainer.appendChild(messageDiv);
+
+        // Ensure automatic scrolling to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function appendFormatted(container, text) {
+        const lines = text.split('\n');
+        lines.forEach((line, idx) => {
+            if (idx > 0) container.appendChild(document.createElement('br'));
+            // Split the line into alternating plain / **bold** segments.
+            const parts = line.split(/(\*\*[^*]+\*\*)/g);
+            parts.forEach(part => {
+                if (!part) return;
+                if (part.length > 4 && part.startsWith('**') && part.endsWith('**')) {
+                    const strong = document.createElement('strong');
+                    strong.textContent = part.slice(2, -2);
+                    container.appendChild(strong);
+                } else {
+                    container.appendChild(document.createTextNode(part));
+                }
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
