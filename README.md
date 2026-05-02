@@ -13,7 +13,7 @@ An interactive, AI-powered chat assistant built for the Indian Election Commissi
 ### The Stack
 *   **Deployment:** Google Cloud Run
 *   **Backend:** FastAPI (Python)
-*   **AI Model:** Google Gemini 1.5 Flash (via Google GenAI SDK)
+*   **AI Model:** Google Gemini 2.5 Flash (via Google GenAI SDK)
 *   **Frontend:** HTML, Vanilla JavaScript, CSS
 
 ### Human vs. AI Split
