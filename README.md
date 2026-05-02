@@ -6,8 +6,6 @@ An interactive, AI-powered chat assistant built for the Indian Election Commissi
 
 **[Open the Voter Education Assistant](https://voter-education-assistant-227872294946.us-central1.run.app)**
 
-> ⚠️ **Submission TODO:** Replace the URL above with the live Cloud Run URL before submitting. The same replacement is required in `LINKEDIN_POST.md`.
-
 ## 🏆 Hackathon Submission Details
 
 ### The Stack
@@ -28,6 +26,26 @@ Screenshots of the key prompts driving this work live in `docs/` (see `docs/prom
 
 **Highlight: Prompt 2 - Accessibility Optimization**
 I intentionally drove the AI to build accessible code. Instead of just asking for a basic chat interface, I explicitly prompted the AI to aim for a 100 Lighthouse Accessibility score by injecting semantic HTML (`<main>`, `<section>`), comprehensive `aria-labels`, and ensuring native keyboard accessibility (like 'Enter' key submission).
+
+---
+
+## 📸 Application Showcase
+
+Here are live examples of the Voter Education Assistant handling complex, domain-specific queries while strictly enforcing safety guardrails.
+
+### 1. Accurate Knowledge Retrieval
+The application correctly parses specific voter scenarios and returns structured, step-by-step factual data based on Election Commission guidelines.
+
+![Voter Registration Process via Form 6](assets/form6-process.png)
+*Example: The assistant outlining the step-by-step process for a first-time voter using Form 6.*
+
+---
+
+### 2. Strict Persona Guardrails and Bias Prevention
+To ensure neutrality, the AI is constrained by system instructions that prevent it from adopting new personas or offering political opinions. It safely pivots out-of-bounds questions back to its core educational purpose.
+
+![AI Refusing Political Query](assets/guardrails-refusal.png)
+*Example: The assistant safely rejecting a prompt asking for political recommendations.*
 
 ---
 

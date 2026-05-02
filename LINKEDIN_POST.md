@@ -6,9 +6,7 @@ I built an interactive AI assistant grounded strictly in the Indian Election Com
 
 To bring this to life, I chose **FastAPI** for a blazingly fast, async Python backend and deployed it to **Google Cloud Run**. Cloud Run was the perfect choice here—it effortlessly handles containerized applications, scales from zero to handle unpredictable traffic spikes, and provides a robust, serverless environment so I can focus on code, not infrastructure.
 
-Check out the live project here: https://REPLACE-ME-WITH-CLOUD-RUN-URL.run.app
-
-<!-- SUBMISSION TODO: Replace the URL above with the actual Cloud Run URL before posting. Verify it loads in an incognito window first. -->
+Check out the live project here: https://voter-education-assistant-227872294946.us-central1.run.app
 
 
 A massive shoutout to the hybrid human-AI workflow that made this possible. I designed the architecture and strict data grounding, while leveraging AI for boilerplate, accessible UI generation, and unit testing!
