@@ -114,6 +114,17 @@
             display: none;
             padding: 0 20px;
         }
+        /* Inline code styling for `backticked` terms in bot responses */
+        .message code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.92em;
+            background-color: rgba(0, 0, 0, 0.08);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+        .user-message code {
+            background-color: rgba(255, 255, 255, 0.22);
+        }
         /* Screen-reader-only class: visually hidden but accessible to assistive technology */
         .sr-only {
             position: absolute;
@@ -208,7 +219,7 @@
 
         // Safe renderer: builds DOM nodes via textContent only.
         // Never touches innerHTML, so any HTML/script in the LLM response is
-        // rendered as literal text. Supports **bold** and newlines only.
+        // rendered as literal text. Supports **bold**, `inline code`, and newlines.
         appendFormatted(messageDiv, String(text == null ? '' : text));
 
         messagesContainer.appendChild(messageDiv);
@@ -221,14 +232,20 @@
         const lines = text.split('\n');
         lines.forEach((line, idx) => {
             if (idx > 0) container.appendChild(document.createElement('br'));
-            // Split the line into alternating plain / **bold** segments.
-            const parts = line.split(/(\*\*[^*]+\*\*)/g);
+            // Split into alternating plain / **bold** / `code` segments.
+            // The capturing group order matches both **...** and `...` — anything
+            // that isn't a match falls through as a plain text node.
+            const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
             parts.forEach(part => {
                 if (!part) return;
                 if (part.length > 4 && part.startsWith('**') && part.endsWith('**')) {
                     const strong = document.createElement('strong');
                     strong.textContent = part.slice(2, -2);
                     container.appendChild(strong);
+                } else if (part.length > 2 && part.startsWith('`') && part.endsWith('`')) {
+                    const code = document.createElement('code');
+                    code.textContent = part.slice(1, -1);
+                    container.appendChild(code);
                 } else {
                     container.appendChild(document.createTextNode(part));
                 }
